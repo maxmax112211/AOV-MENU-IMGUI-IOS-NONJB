@@ -8,24 +8,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
       
-      - name: Install Theos
+      - name: Setup Theos
         run: |
-          # Cài đặt Theos thủ công thay vì dùng script hay bị lỗi API
           git clone --recursive https://github.com/theos/theos.git $HOME/theos
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-          echo "$HOME/theos/bin" >> $GITHUB_PATH
-          
-      - name: Install SDK
-        run: |
-          # Tải SDK từ nguồn dự phòng thay vì gọi API GitHub
           mkdir -p $HOME/theos/sdks
           curl -L -o iPhoneOS14.5.sdk.tar.xz https://github.com/theos/sdks/releases/latest/download/iPhoneOS14.5.sdk.tar.xz
           tar -xf iPhoneOS14.5.sdk.tar.xz -C $HOME/theos/sdks
-          
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "$HOME/theos/bin" >> $GITHUB_PATH
+
       - name: Build Tweak
         run: |
-          # Biên dịch tweak
+          # Loại bỏ các flag C++ nghiêm ngặt để tránh lỗi header
+          export CXXFLAGS="-Wno-module-import-in-extern-c"
           make package
           
       - name: Upload Artifact
