@@ -11,13 +11,20 @@ jobs:
         with:
           submodules: recursive
       
-      - name: Build Tweak
+      - name: Install Theos and SDKs
         run: |
-          # Cài đặt Theos
+          # Cài đặt Theos không dùng script tự động cài SDK mặc định nếu nó hay lỗi
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          
+          # Tạo thư mục SDK thủ công nếu chưa có
+          mkdir -p $THEOS/sdks
+          
+          # Tải SDK thủ công từ nguồn ổn định hơn
+          curl -L -o iPhoneOS14.5.sdk.tar.xz https://github.com/theos/sdks/releases/latest/download/iPhoneOS14.5.sdk.tar.xz
+          tar -xf iPhoneOS14.5.sdk.tar.xz -C $THEOS/sdks
+          
           export THEOS=/Users/runner/theos
           export PATH=$THEOS/bin:$PATH
-          # Thực hiện đóng gói tweak
           make package
           
       - name: Upload Artifact
