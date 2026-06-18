@@ -195,7 +195,7 @@ static bool MenDeal = true;
             
             if (MenDeal == true)
             {                
-                ImGui::Begin("Menu AOV Nonjb #1110", &MenDeal);
+                ImGui::Begin("LermMax Dylib Ver #1110", &MenDeal);
 
             
                 if (ImGui::BeginTabBar("MainTabBar"))  
