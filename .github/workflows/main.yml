@@ -1,0 +1,23 @@
+name: Build Tweak
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      - name: Build Tweak
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          export THEOS=/Users/runner/theos
+          make package
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Tweak-Package
+          path: packages/*.deb
