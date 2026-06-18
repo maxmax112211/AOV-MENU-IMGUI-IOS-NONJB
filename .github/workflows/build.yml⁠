@@ -1,4 +1,4 @@
-name: Build Tweak
+name: Dylib
 
 on: [push]
 
