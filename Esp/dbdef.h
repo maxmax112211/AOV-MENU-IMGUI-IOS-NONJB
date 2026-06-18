@@ -4,12 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#if 0
-#define DobbyBuildVersion c343f74888dffad84d9ad08d9c433456
-#define DobbyHook c8dc3ffa44f22dbd10ccae213dd8b1f8
-#define DobbyInstrument b71e27bca2c362de90c1034f19d839f9
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -41,8 +35,7 @@ typedef struct {
   };
 } HookEntryInfo;
 
-typedef struct _RegisterContext RegisterContext;
-typedef void (*DBICallTy)(RegisterContext *ctx, const HookEntryInfo *info);
+typedef void (*DBICallTy)(void *ctx, const HookEntryInfo *info);
 
 int DobbyInstrument(void *address, DBICallTy dbi_call);
 int DobbyDestroy(void *address);
@@ -51,7 +44,7 @@ void *DobbySymbolResolver(const char *image_name, const char *symbol_name);
 
 int DobbyGlobalOffsetTableReplace(char *image_name, char *symbol_name, void *fake_func, void **orig_func);
 
-#if defined(__arm__) || defined(__arm64__) || defined(__aarch64__) || defined(_M_X64) || defined(__x86_64__)
+#if defined(__arm__) || defined(__arm64__) || defined(__aarch64__) || defined(__x86_64__)
 void dobby_enable_near_branch_trampoline();
 void dobby_disable_near_branch_trampoline();
 #endif
@@ -72,7 +65,7 @@ typedef union _FPReg {
   struct { float f1, f2, f3, f4; } f;
 } FPReg;
 
-typedef struct _RegisterContext {
+typedef struct {
   uint64_t dmmpy_0;
   uint64_t sp;
   uint64_t dmmpy_1;
@@ -104,7 +97,7 @@ typedef struct _RegisterContext {
 
 #elif defined(__arm__)
 
-typedef struct _RegisterContext {
+typedef struct {
   uint32_t dummy_0;
   uint32_t dummy_1;
   uint32_t dummy_2;
@@ -123,7 +116,7 @@ typedef struct _RegisterContext {
 
 #elif defined(__x86_64__)
 
-typedef struct _RegisterContext {
+typedef struct {
   uint64_t dummy_0;
   uint64_t rsp;
 
@@ -145,13 +138,10 @@ typedef struct _RegisterContext {
 #define RT_FAILED -1
 #define RT_SUCCESS 0
 
-typedef enum _RetStatus {
+typedef enum {
   RS_FAILED = -1,
   RS_SUCCESS = 0
 } RetStatus;
-
-
-typedef struct _HookEntryInfo HookEntryInfo;
 
 
 typedef struct {
