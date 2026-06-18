@@ -19,10 +19,12 @@ jobs:
           tar -xf iPhoneOS14.5.sdk.tar.xz -C $HOME/theos/sdks
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
           echo "$HOME/theos/bin" >> $GITHUB_PATH
+          
+      - name: Install ldid
+        run: brew install ldid
 
       - name: Build Tweak
         run: |
-          # Loại bỏ các flag C++ nghiêm ngặt để tránh lỗi header
           export CXXFLAGS="-Wno-module-import-in-extern-c"
           make package
           
